@@ -17,6 +17,7 @@ type Config struct {
 	//The url pointing to API definition (normally swagger.json or swagger.yaml). Default is `doc.json`.
 	URL         string
 	DeepLinking bool
+	RedirectUrl string
 }
 
 // URL presents the url pointing to API definition (normally swagger.json or swagger.yaml).
@@ -38,6 +39,7 @@ func WrapHandler(h *webdav.Handler, confs ...func(c *Config)) gin.HandlerFunc {
 	defaultConfig := &Config{
 		URL:         "doc.json",
 		DeepLinking: true,
+		RedirectUrl: "http://localhost:3200/oauth2-redirect.html",
 	}
 
 	for _, c := range confs {
@@ -60,6 +62,7 @@ func CustomWrapHandler(config *Config, h *webdav.Handler) gin.HandlerFunc {
 		type swaggerUIBundle struct {
 			URL         string
 			DeepLinking bool
+			RedirectUrl string
 		}
 
 		var matches []string
@@ -87,6 +90,7 @@ func CustomWrapHandler(config *Config, h *webdav.Handler) gin.HandlerFunc {
 			index.Execute(c.Writer, &swaggerUIBundle{
 				URL:         config.URL,
 				DeepLinking: config.DeepLinking,
+				RedirectUrl: config.RedirectUrl,
 			})
 		case "doc.json":
 			doc, err := swag.ReadDoc()
@@ -216,6 +220,7 @@ window.onload = function() {
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
+	oauth2RedirectUrl: {{.RedirectUrl}}",
 	layout: "StandaloneLayout",
 	deepLinking: {{.DeepLinking}}
   })
