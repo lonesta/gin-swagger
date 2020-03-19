@@ -220,7 +220,7 @@ window.onload = function() {
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
-	oauth2RedirectUrl: {{.RedirectUrl}}",
+	oauth2RedirectUrl: {{.RedirectUrl}},
 	layout: "StandaloneLayout",
 	deepLinking: {{.DeepLinking}}
   })
